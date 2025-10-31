@@ -8,19 +8,24 @@ interface RouterContextType {
 const RouterContext = createContext<RouterContextType | null>(null);
 
 export function Router({ children }: { children: ReactNode }) {
-  const [path, setPath] = useState(window.location.pathname);
+  const getHashPath = () => {
+    const hash = window.location.hash.slice(1);
+    return hash || '/';
+  };
+
+  const [path, setPath] = useState(getHashPath());
 
   useEffect(() => {
-    const handlePopState = () => {
-      setPath(window.location.pathname);
+    const handleHashChange = () => {
+      setPath(getHashPath());
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
   const navigate = (newPath: string) => {
-    window.history.pushState({}, '', newPath);
+    window.location.hash = newPath;
     setPath(newPath);
   };
 
@@ -29,9 +34,9 @@ export function Router({ children }: { children: ReactNode }) {
       const target = e.target as HTMLElement;
       const anchor = target.closest('a');
 
-      if (anchor && anchor.href.startsWith(window.location.origin)) {
+      if (anchor && anchor.getAttribute('href')?.startsWith('/')) {
         e.preventDefault();
-        const newPath = anchor.pathname;
+        const newPath = anchor.getAttribute('href') || '/';
         navigate(newPath);
       }
     };
