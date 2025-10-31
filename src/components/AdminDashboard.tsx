@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase, Property } from '../lib/supabase';
 import { signOut } from '../lib/auth';
-import { LogOut, Plus, Edit, Trash2, Home } from 'lucide-react';
+import { LogOut, Plus, Edit, Trash2, Home, Settings } from 'lucide-react';
+import SettingsEditor from './SettingsEditor';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -11,6 +12,7 @@ interface AdminDashboardProps {
 export default function AdminDashboard({ onLogout, onEditProperty }: AdminDashboardProps) {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState<'properties' | 'settings'>('properties');
 
   useEffect(() => {
     fetchProperties();
@@ -84,16 +86,41 @@ export default function AdminDashboard({ onLogout, onEditProperty }: AdminDashbo
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-slate-900">Ingatlanok kezelése</h2>
+        <div className="flex space-x-4 border-b border-slate-200 mb-8">
           <button
-            onClick={() => onEditProperty(null)}
-            className="flex items-center space-x-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition"
+            onClick={() => setActiveTab('properties')}
+            className={`px-4 py-3 font-semibold transition ${
+              activeTab === 'properties'
+                ? 'border-b-2 border-slate-900 text-slate-900'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
           >
-            <Plus className="w-5 h-5" />
-            <span>Új ingatlan</span>
+            Ingatlanok
+          </button>
+          <button
+            onClick={() => setActiveTab('settings')}
+            className={`px-4 py-3 font-semibold transition ${
+              activeTab === 'settings'
+                ? 'border-b-2 border-slate-900 text-slate-900'
+                : 'text-slate-600 hover:text-slate-900'
+            }`}
+          >
+            Beállítások
           </button>
         </div>
+
+        {activeTab === 'properties' && (
+          <>
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-2xl font-bold text-slate-900">Ingatlanok kezelése</h2>
+              <button
+                onClick={() => onEditProperty(null)}
+                className="flex items-center space-x-2 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800 transition"
+              >
+                <Plus className="w-5 h-5" />
+                <span>Új ingatlan</span>
+              </button>
+            </div>
 
         {loading ? (
           <div className="text-center py-12">
@@ -131,6 +158,12 @@ export default function AdminDashboard({ onLogout, onEditProperty }: AdminDashbo
                     Szobák
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Tájolás
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
+                    Erkély
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">
                     Státusz
                   </th>
                   <th className="px-6 py-3 text-right text-xs font-medium text-slate-500 uppercase tracking-wider">
@@ -155,6 +188,12 @@ export default function AdminDashboard({ onLogout, onEditProperty }: AdminDashbo
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
                       {property.rooms} szoba
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                      {property.orientation || '-'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-900">
+                      {property.balcony ? '✓' : '-'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span
@@ -192,6 +231,12 @@ export default function AdminDashboard({ onLogout, onEditProperty }: AdminDashbo
               </tbody>
             </table>
           </div>
+        )}
+          </>
+        )}
+
+        {activeTab === 'settings' && (
+          <SettingsEditor />
         )}
       </main>
     </div>

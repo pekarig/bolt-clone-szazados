@@ -17,6 +17,8 @@ export default function PropertyEditor({ property, onClose, onSave }: PropertyEd
     area: 0,
     rooms: 1,
     floor: 0,
+    balcony: false,
+    orientation: '',
     status: 'available' as 'available' | 'sold' | 'reserved',
   });
   const [images, setImages] = useState<string[]>([]);
@@ -34,6 +36,8 @@ export default function PropertyEditor({ property, onClose, onSave }: PropertyEd
         area: property.area,
         rooms: property.rooms,
         floor: property.floor,
+        balcony: property.balcony || false,
+        orientation: property.orientation || '',
         status: property.status,
       });
       setImages(property.images || []);
@@ -255,6 +259,41 @@ export default function PropertyEditor({ property, onClose, onSave }: PropertyEd
                 className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none"
                 required
               />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-2">
+                Tájolás
+              </label>
+              <select
+                value={formData.orientation}
+                onChange={(e) => setFormData({ ...formData, orientation: e.target.value })}
+                className="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-900 focus:border-transparent outline-none"
+              >
+                <option value="">Válassz tájolást</option>
+                <option value="Észak">Észak</option>
+                <option value="Észak-Kelet">Észak-Kelet</option>
+                <option value="Kelet">Kelet</option>
+                <option value="Dél-Kelet">Dél-Kelet</option>
+                <option value="Dél">Dél</option>
+                <option value="Dél-Nyugat">Dél-Nyugat</option>
+                <option value="Nyugat">Nyugat</option>
+                <option value="Észak-Nyugat">Észak-Nyugat</option>
+              </select>
+            </div>
+
+            <div className="flex items-center">
+              <label className="flex items-center space-x-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.balcony}
+                  onChange={(e) => setFormData({ ...formData, balcony: e.target.checked })}
+                  className="w-5 h-5 text-slate-900 border-slate-300 rounded focus:ring-slate-900"
+                />
+                <span className="text-sm font-medium text-slate-700">Erkély van</span>
+              </label>
             </div>
           </div>
 

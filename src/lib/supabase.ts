@@ -8,17 +8,19 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 export interface Property {
   id: string;
   property_number: string;
+  title: string;
   floor: number;
   rooms: number;
   area: number;
-  balcony: number;
+  balcony: boolean;
   orientation: string;
   price: number;
   status: 'available' | 'reserved' | 'sold';
   description: string;
-  floor_plan_url: string;
-  size_category: 'S' | 'M' | 'L' | 'XL';
+  images: string[];
+  floor_plan: string | null;
   created_at: string;
+  updated_at: string;
 }
 
 export interface GalleryImage {
