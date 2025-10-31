@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Router } from './components/Router';
+import { Router, useRouter } from './components/Router';
 import HomePage from './components/HomePage';
 import FlatListPage from './components/FlatListPage';
 import PropertyDetailPage from './components/PropertyDetailPage';
@@ -10,16 +10,7 @@ import Modal from './components/Modal';
 import Chat from './components/Chat';
 
 function AppContent() {
-  const [showModal, setShowModal] = useState(false);
-  const path = window.location.pathname;
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowModal(true);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const { path } = useRouter();
 
   if (path === '/') {
     return <HomePage />;
