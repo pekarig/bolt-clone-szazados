@@ -6,6 +6,7 @@ import PropertyDetailPage from './components/PropertyDetailPage';
 import TechnicalPage from './components/TechnicalPage';
 import GalleryPage from './components/GalleryPage';
 import QuotePage from './components/QuotePage';
+import AdminPage from './components/AdminPage';
 import Modal from './components/Modal';
 import Chat from './components/Chat';
 
@@ -24,6 +25,8 @@ function AppContent() {
     return <GalleryPage />;
   } else if (path === '/quote') {
     return <QuotePage />;
+  } else if (path === '/admin') {
+    return <AdminPage />;
   }
 
   return <HomePage />;
